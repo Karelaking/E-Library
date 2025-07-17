@@ -1,20 +1,14 @@
-import { config } from "@/config/config";
-import type { HttpError } from "http-errors";
-import type { Request, Response, NextFunction } from "express";
+import createHttpError from "http-errors";
 
-const error_handler = (
-  error: HttpError,
-  request: Request,
-  response: Response,
-  next: NextFunction
+const errorHandler = (
+  statusCode: number = 500,
+  message: string = "something went wrong...",
 ) => {
-  const statusCode = error.statusCode || 500;
-
-  return response.status(statusCode).json({
-    status: statusCode,
-    message: error.message,
-    errorStack: config.env === "development" ? error.stack : '',
-  });
+  const error = createHttpError(
+    statusCode,
+    message,
+  );
+  return error;
 };
 
-export default error_handler;
+export default errorHandler;

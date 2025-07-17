@@ -8,7 +8,7 @@ import connection from "@/database/connection";
   });
 
 app.listen(config.port, () => {
-  console.log("Server is running on port 8080");
+  console.log(`Server is running on port ${config.port}`);
 });
 
 })();

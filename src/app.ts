@@ -1,8 +1,10 @@
+import errorHandler from "@/utils/error_handler";
+import global_error_handler from "@/middleware/global_error_handler";
+
 import express, { type Express } from "express";
-import error_handler from "./utils/error_handler";
 
 const app: Express = express();
 
+app.use(global_error_handler);
 
-app.use(error_handler);
 export default app;
