@@ -4,7 +4,7 @@ import connection from "@/database/connection";
 
 ;(async () => {
   await connection({
-    databaseURL: config.databaseURL,
+    databaseURL: config.databaseURL as string,
   });
 
 app.listen(config.port, () => {

@@ -1,6 +1,10 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const _config = {
-  port: 8080,
-  databaseURL: "mongodb+srv://mradul:mradul@todo.zbnnlei.mongodb.net",
+  port: process.env.PORT,
+  databaseURL: process.env.MONGO_DB_URL,
 };
 
 export const config = Object.freeze(_config);
