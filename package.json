@@ -2,10 +2,23 @@
   "name": "e-library",
   "module": "index.ts",
   "type": "module",
+  "version": "1.0.0",
+  "description": "E-Library",
+  "main": "index.ts",
+  "scripts": {
+    "start": "bun index.ts",
+    "dev": "bun --watch index.ts"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/express": "^5.0.3",
+    "@types/mongoose": "^5.11.97"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "mongoose": "^8.16.4",
+    "express": "^5.1.0"
   }
 }
