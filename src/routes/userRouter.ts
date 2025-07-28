@@ -1,11 +1,14 @@
+import { validator } from "@/middleware/validator";
 import UserController from "@/controllers/userController";
 
 import { Router } from "express";
 
-
 const userRouter = Router();
 const userController = new UserController();
 
+userRouter.route("/login").post(userController.login);
+userRouter.route("/logout").post(validator, userController.logout);
+userRouter.route("/delete").delete(validator, userController.delete);
 userRouter.route("/register").post(userController.register);
 
 
