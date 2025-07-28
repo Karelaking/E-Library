@@ -1,5 +1,5 @@
 import User from "@/models/userModel";
-import type { IRequest } from "@/types/IRequest";
+import type { IRequest } from "@/types/requestTypes";
 import type { IUser } from "@/types/userTypes";
 import asyncHandler from "@/utils/asyncHandler";
 import errorHandler from "@/utils/error_handler";
@@ -142,7 +142,7 @@ class UserController {
 
   delete = asyncHandler(
     async (request: IRequest, response: Response, next: NextFunction) => {
-      const {_id} = request.user as IUser;
+      const { _id } = request.user as IUser;
       const { password } = request.body;
 
       const user = await User.findById(_id);

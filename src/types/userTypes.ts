@@ -1,4 +1,4 @@
-interface IUser extends IUserMethods {
+interface BaseUser extends Document {
   _id: string;
   name: string;
   role: string;
@@ -10,10 +10,10 @@ interface IUser extends IUserMethods {
   accsesToken: string;
 }
 
-interface IUserMethods {
+interface UserMethods extends Document {
   comparePassword: (password: string) => Promise<boolean>;
   generateAuthToken: () => string;
   generateRefreshToken: () => string;
 }
 
-export { type IUser };
+export type IUser = BaseUser & UserMethods;

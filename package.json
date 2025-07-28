@@ -16,7 +16,8 @@
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/mongoose": "^5.11.97"
+    "@types/mongoose": "^5.11.97",
+    "@types/multer": "^2.0.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -30,6 +31,8 @@
     "express-validator": "^7.2.1",
     "http-error": "^0.0.6",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.4"
+    "mongoose": "^8.16.4",
+    "multer": "^2.0.2",
+    "path": "^0.12.7"
   }
 }

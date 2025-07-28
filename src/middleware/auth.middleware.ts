@@ -1,10 +1,11 @@
-import jwt from "jsonwebtoken";
 import User from "@/models/userModel";
 import { config } from "@/config/config";
-import asyncHandler from "@/utils/asyncHandler";
-import errorHandler from "@/utils/error_handler";
 import type { IUser } from "@/types/userTypes";
-import type { IRequest } from "@/types/IRequest";
+import asyncHandler from "@/utils/asyncHandler";
+import type { IRequest } from "@/types/requestTypes";
+import errorHandler from "@/utils/error_handler";
+
+import jwt from "jsonwebtoken";
 import type { NextFunction, Response } from "express";
 
 const jwtSecret = config.secret as string;
@@ -24,7 +25,9 @@ export const validator = asyncHandler(
         return next(errorHandler(401, "Unable to decode token"));
       }
 
-      const user = await User.findById(decoded?._id as string).select("-password");
+      const user = await User.findById(decoded?._id as string).select(
+        "-password"
+      );
 
       if (!user) {
         return next(errorHandler(401, "User not found"));

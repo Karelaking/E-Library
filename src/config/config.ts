@@ -6,6 +6,7 @@ const _config = {
   secret: process.env.JWT_SECRET,
   apiPrefix: process.env.API_PREFIX,
   databaseURL: process.env.MONGO_DB_URL,
+  uploadFileSize: process.env.UPLOAD_FILE_SIZE,
 };
 
 
