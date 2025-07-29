@@ -17,7 +17,7 @@ export const validator = asyncHandler(
       const token = request.cookies.token as string;
 
       if (!token) {
-        return next(errorHandler(401, "Token not found"));
+        return next(errorHandler(401, "Not logged in"));
       }
       const decoded = jwt.verify(token, jwtSecret) as IUser;
 

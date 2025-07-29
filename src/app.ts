@@ -1,6 +1,6 @@
 import { config } from "./config/config";
 import cookieParser from "cookie-parser";
-import global_error_handler from "@/middleware/global_error_handler";
+import global_error_handler from "@/middleware/errorHandler.middleware";
 
 import express, { type Express } from "express";
 

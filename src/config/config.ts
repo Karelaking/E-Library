@@ -7,6 +7,9 @@ const _config = {
   apiPrefix: process.env.API_PREFIX,
   databaseURL: process.env.MONGO_DB_URL,
   uploadFileSize: process.env.UPLOAD_FILE_SIZE,
+  cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+  cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
+  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
 };
 
 
