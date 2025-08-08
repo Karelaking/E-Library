@@ -86,7 +86,96 @@ class BookController {
     }
   );
 
-  deleteBook = asyncHandler(
+  getBookById = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { id } = request.params;
+
+      try {
+        const book = await Books.findById(id);
+
+        if (!book) {
+          return next(errorHandler(400, "Book not found"));
+        }
+
+        return response.status(200).json(book);
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  getAllBook = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      try {
+        const books = await Books.find();
+
+        if (!books) {
+          return next(errorHandler(400, "Book not found"));
+        }
+
+        return response.status(200).json(books);
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  updateBookById = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { id } = request.params;
+      const { title, price, category, description } = request.body;
+
+      try {
+        const book = await Books.findById(id);
+
+        if (!book) {
+          return next(errorHandler(400, "Book not found"));
+        }
+
+        book.title = title;
+        book.price = price;
+        book.category = category;
+        book.description = description;
+
+        await book.save();
+
+        return response.status(200).json({
+          status: 200,
+          message: "Book updated successfully",
+        });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  updateBookPriceById = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { id } = request.params;
+      const { price } = request.body;
+
+      try {
+        const book = await Books.findById(id);
+
+        if (!book) {
+          return next(errorHandler(400, "Book not found"));
+        }
+
+        book.price = price;
+
+        await book.save();
+
+        return response.status(200).json({
+          status: 200,
+          message: "Book updated successfully",
+        });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  deleteBookById = asyncHandler(
     async (request: IRequest, response: Response, next: NextFunction) => {
       const { id } = request.params;
 
