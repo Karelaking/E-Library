@@ -12,4 +12,12 @@ interface BaseBook extends Document {
   description: string;
 }
 
-export type IBook = BaseBook;
+interface IBookMethods extends Document {
+  uploadFile: (
+    fileName: string,
+    filePath: string,
+    fileType: Express.Multer.File
+  ) => Promise<any>;
+}
+
+export type IBook = BaseBook & IBookMethods;

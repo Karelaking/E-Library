@@ -10,12 +10,14 @@ app.use(express.json());
 app.use(cookieParser());
 
 // API Routes
-import userRouter from "@/routes/userRouter";
+import authRouter from "@/routes/authRouter";
 import bookRouter from "@/routes/bookRoutes";
+import userRouter from "./routes/userRouter";
 
 // API Prefix for all routes
-app.use(`${config.apiPrefix}/users`, userRouter);
+app.use(`${config.apiPrefix}/auth`, authRouter);
 app.use(`${config.apiPrefix}/books`, bookRouter);
+app.use(`${config.apiPrefix}/users`, userRouter);
 
 app.use(global_error_handler);
 

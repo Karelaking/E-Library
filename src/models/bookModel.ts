@@ -1,6 +1,7 @@
 import type { IBook } from "@/types/bookTypes";
-import type { IRequest } from "@/types/requestTypes";
-import type { Response, NextFunction } from "express";
+import errorHandler from "@/utils/error_handler";
+import uploadCloudinary from "@/utils/uploadCloudinary";
+
 import { Schema, model } from "mongoose";
 
 // define book schema with mongoose
@@ -41,6 +42,18 @@ const bookSchema = new Schema<IBook>(
   },
   { timestamps: true }
 );
+
+bookSchema.methods.uploadFile = async function (
+  fileName: string,
+  filePath: string,
+  fileType: Express.Multer.File
+): Promise<any> {
+  try {
+    return await uploadCloudinary(fileName, filePath, fileType);
+  } catch (error: any) {
+    errorHandler(500, error.message);
+  }
+};
 
 const Books = model<IBook>("Books", bookSchema);
 

@@ -88,10 +88,24 @@ class BookController {
 
   deleteBook = asyncHandler(
     async (request: IRequest, response: Response, next: NextFunction) => {
-      return response.status(200).json({
-        status: 200,
-        message: "Book deleted successfully",
-      });
+      const { id } = request.params;
+
+      try {
+        const book = await Books.findById(id);
+
+        if (!book) {
+          return next(errorHandler(400, "Book not found"));
+        }
+
+        await Books.deleteOne({ _id: book._id });
+
+        return response.status(200).json({
+          status: 200,
+          message: "Book deleted successfully",
+        });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
     }
   );
 }

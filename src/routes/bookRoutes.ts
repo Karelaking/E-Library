@@ -8,6 +8,7 @@ const bookRouter = Router();
 const bookController = new BookController();
 
 bookRouter.route("/").post(validator, upload, bookController.addBook);
-bookRouter.route("/delete").delete(validator, bookController.deleteBook);
+bookRouter.route("/:id").delete(validator, bookController.deleteBook);
 
 export default bookRouter;
+

@@ -10,8 +10,7 @@ import type { NextFunction, Response } from "express";
 
 const jwtSecret = config.secret as string;
 
-
-export const validator = asyncHandler(
+export const adminValidator = asyncHandler(
   async (request: IRequest, response: Response, next: NextFunction) => {
     try {
       const token = request.cookies.token as string;
@@ -33,7 +32,9 @@ export const validator = asyncHandler(
         return next(errorHandler(401, "User not found"));
       }
 
-      request.user = user as IUser;
+      if (user.type !== "admin") {
+        return next(errorHandler(401, "You have no access"));
+      }
 
       next();
     } catch (error: any) {

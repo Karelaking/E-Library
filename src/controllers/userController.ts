@@ -1,186 +1,259 @@
 import User from "@/models/userModel";
-import type { IRequest } from "@/types/requestTypes";
-import type { IUser } from "@/types/userTypes";
 import asyncHandler from "@/utils/asyncHandler";
 import errorHandler from "@/utils/error_handler";
 
-import type { Request, Response, NextFunction } from "express";
+import type { IRequest } from "@/types/requestTypes";
+import type { Response, NextFunction } from "express";
 
-class UserController {
-  test = asyncHandler(
-    async (request: Request, response: Response, next: NextFunction) => {
-      return response.status(200).json({
-        status: 200,
-        message: "Test",
-        body: request.body,
-      });
-    }
-  );
-
-  register = asyncHandler(
-    async (request: Request, response: Response, next: NextFunction) => {
-      // get user data from request body
-      const { name, email, password, address, phone, gender, role } =
-        request.body;
-
-      // check if user already exists
-      const user = await User.findOne({ email });
-
-      if (user) {
-        return next(errorHandler(400, "User already exists"));
-      }
-
-      // create new user
-      const newUser = User.create({
-        name,
-        email,
-        password,
-        address,
-        phone,
-        gender,
-        role,
-      });
-
-      // check user is created or not
-      if (!newUser) {
-        return next(errorHandler(501, "User not created"));
-      }
-
-      // generate auth token
-      const token = (await newUser).generateAuthToken();
-
-      // send response
-      return response.status(201).json({
-        status: 201,
-        message: "User created successfully",
-      });
-    }
-  );
-
-  login = asyncHandler(
-    async (request: Request, response: Response, next: NextFunction) => {
-      // get user data from request body
-      const { email, password } = request.body;
-
-      // check if user exists
-      const user = await User.findOne({ email });
-
-      if (!user) {
-        return next(errorHandler(400, "User not found"));
-      }
-
-      // check if password is correct
-      const isPasswordCorrect = await user.comparePassword(password);
-
-      if (!isPasswordCorrect) {
-        return next(errorHandler(400, "Incorrect password"));
-      }
-
-      // generate auth token
-      const token = user.generateAuthToken();
-
-      user.accsesToken = token;
-      user.save();
-
-      // send Response
-      return response
-        .cookie("token", token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "strict",
-          maxAge: 1000 * 60 * 60 * 24 * 7,
-        })
-        .status(200)
-        .json({
-          status: 200,
-          message: "Logged in successfully",
-        });
-    }
-  );
-
-  logout = asyncHandler(
+class userController {
+  getUser = asyncHandler(
     async (request: IRequest, response: Response, next: NextFunction) => {
-      // get user data from request body
-      const { email } = request.user as IUser;
+      try {
+        const users = await User.findById({
+          _id: request.user?._id,
+        });
+
+        if (!users) {
+          return next(errorHandler(400, "User not found"));
+        }
+
+        return response.status(200).json(users);
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  getUserById = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { id } = request.params;
+      try {
+        const user = await User.findById(id);
+
+        if (!user) {
+          return next(errorHandler(400, "User not found"));
+        }
+
+        return response.status(200).json(user);
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  updateFullUser = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { name,email, password, role, phone, gender, address } = request.body;
+      const  id  = request.user?._id;
+
+      try {
+        const user = await User.findById(id);
+
+        if (!user) {
+          return next(errorHandler(400, "User not found"));
+        }
+
+        user.name = name;
+        user.role = role;
+        user.phone = phone;
+        user.email = email;
+        user.gender = gender;
+        user.address = address;
+        user.password = password;
+
+        await user.save();
+
+        return response.status(200).json({
+          status: 200,
+          message: "User updated successfully",
+        });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  updateFullUserById = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { name,email, password, role, phone, gender, address } = request.body;
+      const  id  = request.params.id;
+
+      try {
+        const user = await User.findById(id);
+
+        if (!user) {
+          return next(errorHandler(400, "User not found"));
+        }
+
+        user.name = name;
+        user.role = role;
+        user.phone = phone;
+        user.email = email;
+        user.gender = gender;
+        user.address = address;
+        user.password = password;
+
+        await user.save();
+
+        return response.status(200).json({
+          status: 200,
+          message: "User updated successfully",
+        });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  updateUserById = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { name } = request.body;
+      const  id  = request.params.id;
+
+      try {
+        const user = await User.findById(id);
+
+        if (!user) {
+          return next(errorHandler(400, "User not found"));
+        }
+
+        user.name = name;
+
+        await user.save();
+
+        return response.status(200).json({
+          status: 200,
+          message: "User updated successfully",
+        });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  updateUser = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { name } = request.body;
+      const  id  = request.user?._id;
+
+      try {
+        const user = await User.findById(id);
+
+        if (!user) {
+          return next(errorHandler(400, "User not found"));
+        }
+
+        user.name = name;
+
+        await user.save();
+
+        return response.status(200).json({
+          status: 200,
+          message: "User updated successfully",
+        });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  updateUserPassword = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const id = request.user?._id;
       const { password } = request.body;
 
-      // check if user exists
-      const user = await User.findOne({ email });
+      try {
+        const user = await User.findById(id);
 
-      if (!user) {
-        return next(errorHandler(400, "User not found"));
-      }
+        if (!user) {
+          return next(errorHandler(400, "User not found"));
+        }
 
-      // check if password is correct
-      const isPasswordCorrect = await user.comparePassword(password);
+        user.password = password;
 
-      if (!isPasswordCorrect) {
-        return next(errorHandler(400, "Incorrect password"));
-      }
+        await user.save();
 
-      // generate auth token
-      const token = user.generateAuthToken();
-
-      user.accsesToken = "";
-      user.save();
-
-      // send Response
-      return response
-        .cookie("token", "", {
-          httpOnly: true,
-          secure: true,
-          sameSite: "strict",
-          maxAge: 0,
-        })
-        .status(200)
-        .json({
+        return response.status(200).json({
           status: 200,
-          message: "Logged out successfully",
+          message: "User updated successfully",
         });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
     }
   );
 
-  delete = asyncHandler(
+  updateUserPasswordById = asyncHandler(
     async (request: IRequest, response: Response, next: NextFunction) => {
-      const { _id } = request.user as IUser;
+      const id = request.params.id;
       const { password } = request.body;
 
-      const user = await User.findById(_id);
+      try {
+        const user = await User.findById(id);
 
-      if (!user) {
-        return next(errorHandler(400, "User not found"));
+        if (!user) {
+          return next(errorHandler(400, "User not found"));
+        }
+
+        user.password = password;
+
+        await user.save();
+
+        return response.status(200).json({
+          status: 200,
+          message: "User updated successfully",
+        });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
       }
+    }
+  );
 
-      // check if user password is correct or not
-      const isPasswordCorrect = await user.comparePassword(password);
+  deleteUser = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { id } = request.params;
 
-      if (!isPasswordCorrect) {
-        return next(errorHandler(400, "Incorrect password"));
-      }
+      try {
+        const user = await User.findById(id);
 
-      // check if user is logged in or not
-      if (!user.accsesToken) {
-        return next(errorHandler(400, "User not logged in"));
-      }
+        if (!user) {
+          return next(errorHandler(400, "User not found"));
+        }
 
-      // delete user
-      await User.deleteOne({ _id: user._id });
+        await User.deleteOne({ _id: user._id });
 
-      // send response
-      return response
-        .cookie("token", "", {
-          httpOnly: true,
-          secure: true,
-          sameSite: "strict",
-          maxAge: 0,
-        })
-        .status(200)
-        .json({
+        return response.status(200).json({
           status: 200,
           message: "User deleted successfully",
         });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
+    }
+  );
+
+  deleteUserById = asyncHandler(
+    async (request: IRequest, response: Response, next: NextFunction) => {
+      const { id } = request.params;
+
+      try {
+        const user = await User.findById(id);
+
+        if (!user) {
+          return next(errorHandler(400, "User not found"));
+        }
+
+        await User.deleteOne({ _id: user._id });
+
+        return response.status(200).json({
+          status: 200,
+          message: "User deleted successfully",
+        });
+      } catch (error: any) {
+        return next(errorHandler(500, error.message));
+      }
     }
   );
 }
 
-export default UserController;
+export default userController;

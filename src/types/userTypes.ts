@@ -1,6 +1,7 @@
 interface BaseUser extends Document {
   _id: string;
   name: string;
+  type: string;
   role: string;
   email: string;
   phone?: string;

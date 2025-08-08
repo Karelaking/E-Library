@@ -9,6 +9,12 @@ import { Schema, model } from "mongoose";
 // define user schema with mongoose
 const userSchema = new Schema<IUser>(
   {
+    type: {
+      type: String,
+      required: true,
+      default: "user",
+      enum: ["admin", "user"],
+    },
     name: {
       type: String,
       required: true,
